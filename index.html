@@ -39,39 +39,77 @@
         }
 
         .status-item {
-            background-color: var(--light-accent); 
-            padding: 20px 15px 15px 15px; 
-            margin-bottom: 10px;
-            border: 1px solid white; 
-            border-radius: 0; 
-            box-shadow: 0 2px 5px rgba(122, 188, 253, 0.2); 
+            background-color: white; 
+            padding: 15px; 
+            margin-bottom: 12px; 
+            border-radius: 8px; 
+            border: 1px solid black; /* DIUBAH: Garis Hitam */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); 
             cursor: pointer; 
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
+            
+            box-sizing: border-box; 
         }
 
-        .status-item:hover { background-color: #DDEFFF; }
+        .status-item:hover { 
+            background-color: var(--light-accent); 
+            border-color: black; /* Tetap hitam saat hover */
+            box-shadow: 0 6px 12px rgba(122, 188, 253, 0.4); 
+        }
+
+        /* --- STYLES UNTUK HEADER PROFIL --- */
+        .status-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dotted var(--light-accent);
+        }
+
+        .profile-photo {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: var(--light-accent);
+            border: 2px solid var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+
+        .profile-photo svg {
+            width: 30px;
+            height: 30px;
+            fill: var(--accent-color);
+            transform: translateY(5px); 
+        }
+
+        .profile-name {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            color: var(--accent-color);
+            font-size: 0.95em;
+        }
         
         .status-text {
-            font-family: 'Nunito', sans-serif; font-size: 1.6em; font-weight: 900; color: var(--text-color); margin: 0 0 10px 0; text-align: center; text-transform: uppercase; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;
-        }
-
-        /* --- Gaya Cuplikan Komentar --- */
-        .comment-snippet-container {
-            min-height: 20px; 
+            font-family: 'Nunito', sans-serif; 
+            font-size: 1.2em; 
+            font-weight: 400; 
+            color: var(--text-color); 
+            margin: 0 0 10px 0; 
             text-align: left; 
-            margin-bottom: 10px;
-            border-bottom: 1px dashed var(--accent-color);
-            padding-bottom: 5px;
-            padding-left: 10px;
+            
+            text-transform: none; 
+            
+            display: block; 
+            overflow: visible; 
+            white-space: pre-wrap; 
+            word-break: break-word; 
+            
+            line-height: 1.3;
         }
-
-        .snippet-list { list-style: none; padding: 0; margin: 0; }
-        .snippet-item {
-            font-size: 0.85em; color: var(--subtle-text); font-style: italic; display: flex; align-items: flex-start; margin-bottom: 3px; gap: 5px;
-        }
-        .snippet-item span { word-break: break-word; }
-        .snippet-icon { width: 14px; height: 14px; fill: var(--accent-color); margin-top: 2px; min-width: 14px; }
-        /* --- Akhir Gaya Cuplikan Komentar --- */
         
         /* Metadata (Waktu, CTA, dan Badge) */
         .status-meta {
@@ -86,28 +124,37 @@
         }
         
         .input-group { display: flex; align-items: center; }
-        .input-group textarea { width: 100%; padding: 10px; border: 1px solid var(--accent-color); border-radius: 5px; box-sizing: border-box; resize: none; color: var(--text-color); }
+        
+        .input-group textarea { 
+            width: 100%; padding: 10px; border: 1px solid var(--accent-color); border-radius: 5px; box-sizing: border-box; 
+            resize: none; 
+            overflow: hidden; 
+            color: var(--text-color); 
+            min-height: 20px; 
+        }
         #send-status-btn { display: none; }
         
-        /* MODAL */
+        /* MODAL (FULL SCREEN) */
         .modal { 
             display: none; position: fixed; z-index: 20; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; 
             background-color: rgba(0, 0, 0, 0.6); padding-top: 0; 
         }
         
-        /* ANIMASI MEMBESAR (SCALE) */
-        @keyframes animatescale { 
-            from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; } 
-            to { transform: translate(-50%, -50%) scale(1); opacity: 1; } 
-        }
-
         .modal-content { 
-            background-color: white; margin: 0; padding: 20px; border: 1px solid var(--accent-color); width: 90%; max-width: 500px; border-radius: 8px; position: absolute; 
-            top: 50%; left: 50%; 
-            transform: translate(-50%, -50%); 
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); 
-            animation-name: animatescale; 
-            animation-duration: 0.3s; 
+            background-color: white; 
+            margin: 0; 
+            padding: 15px; 
+            width: 100%; 
+            height: 100vh; 
+            border-radius: 0;
+            position: relative; 
+            top: 0; 
+            left: 0; 
+            transform: none; 
+            box-shadow: none;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
         }
         
         /* TOMBOL TUTUP BARU (Kanan Atas) */
@@ -126,16 +173,43 @@
             text-transform: uppercase;
         }
 
-        /* Penyesuaian Ruang untuk Tombol Tutup */
+        /* Teks Status di Pop-up */
         .popup-status-text { 
-            font-family: 'Nunito', sans-serif; font-size: 1.4em; font-weight: 900; color: var(--text-color); 
-            margin: 40px 0 20px 0; 
-            text-align: center; text-transform: uppercase; padding: 15px; background-color: var(--light-accent); border-radius: 5px; border: 1px solid var(--accent-color); 
+            font-family: 'Nunito', sans-serif; 
+            font-size: 1.4em; 
+            
+            font-weight: 400; 
+            
+            color: var(--text-color); 
+            margin: 50px 0 20px 0; 
+            text-align: center; 
+            
+            text-transform: none; 
+            
+            padding: 15px; 
+            background-color: var(--light-accent); 
+            border-radius: 5px; 
+            border: 1px solid var(--accent-color); 
+            overflow-y: auto; 
+            flex-shrink: 0;
+            white-space: pre-wrap;
+            word-break: break-word; 
         }
 
-        .comment-section { margin-top: 20px; }
-        .comment-header { font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--accent-color); border-bottom: 2px solid var(--light-accent); padding-bottom: 5px; margin-bottom: 10px; }
-        .comment-list { list-style: none; padding: 0; max-height: 250px; overflow-y: auto; margin-bottom: 15px; }
+        .comment-section { 
+            margin-top: 20px; 
+            flex-grow: 1; 
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .comment-header { flex-shrink: 0; font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--accent-color); border-bottom: 2px solid var(--light-accent); padding-bottom: 5px; margin-bottom: 10px; }
+        .comment-list { 
+            list-style: none; padding: 0; 
+            overflow-y: auto; 
+            margin-bottom: 15px; 
+            flex-grow: 1; 
+        }
 
         .comment-item { 
             padding: 8px 0; border-bottom: 1px dotted var(--light-accent); font-size: 0.9em; color: var(--text-color); display: flex; align-items: flex-start; gap: 8px; 
@@ -146,8 +220,15 @@
         .comment-info { font-size: 0.75em; color: var(--subtle-text); margin-top: 3px; display: block; }
         
         /* Input Komentar (Enter to Send) */
-        .comment-input-group { display: flex; align-items: flex-end; }
-        .comment-input-group textarea { flex-grow: 1; padding: 8px; border: 1px solid var(--subtle-text); border-radius: 5px; resize: none; margin-right: 0; }
+        .comment-input-group { display: flex; align-items: flex-end; flex-shrink: 0; }
+        /* Style untuk textarea di modal */
+        .comment-input-group textarea { 
+            flex-grow: 1; padding: 8px; border: 1px solid var(--subtle-text); border-radius: 5px; 
+            resize: none; 
+            overflow: hidden; 
+            margin-right: 0; 
+            min-height: 20px;
+        }
         #send-comment-btn { display: none; }
 
 
@@ -162,54 +243,38 @@
             }
 
             .status-item {
-                padding: 15px 10px 10px 10px; /* Padding card status lebih kecil */
+                padding: 10px;
+                margin-bottom: 10px; 
             }
 
             .status-text {
-                font-size: 1.4em; /* Ukuran font status sedikit dikecilkan */
-                margin: 0 0 8px 0;
-            }
-
-            /* Footer Input Status */
-            footer {
-                padding: 8px 10px;
-            }
-            .input-group textarea {
-                padding: 8px;
+                font-size: 1.0em; 
+                margin: 0 0 5px 0;
             }
             
             /* Modal */
             .modal-content {
-                width: 95%; /* Modal sedikit lebih lebar di mobile */
-                padding: 15px;
+                padding: 10px;
             }
 
             /* Tombol Tutup */
             #close-modal-btn {
                 top: 10px;
                 right: 10px;
-                padding: 6px 10px; /* Tombol tutup lebih ringkas */
+                padding: 6px 10px; 
                 font-size: 0.7em;
             }
 
             /* Teks Status di Pop-up */
             .popup-status-text {
                 font-size: 1.2em;
-                margin: 35px 0 15px 0; /* Margin atas dikurangi, tapi masih aman dari tombol tutup */
+                margin: 35px 0 10px 0; 
                 padding: 10px;
             }
 
             /* Komentar */
-            .comment-list {
-                max-height: 200px; /* Tinggi daftar komentar disesuaikan */
-            }
             .comment-item {
                 font-size: 0.8em;
-            }
-            .comment-icon {
-                width: 18px;
-                height: 18px;
-                min-width: 18px;
             }
             .comment-input-group textarea {
                 padding: 6px;
@@ -230,7 +295,7 @@
 
     <footer>
         <div class="input-group">
-            <textarea id="new-status-input" rows="1" placeholder="Tulis lalu enter untuk posting" maxlength="150"></textarea>
+            <textarea id="new-status-input" rows="1" placeholder="Tulis status, lalu tekan Enter untuk Kirim"></textarea>
             <button id="send-status-btn">Kirim</button> 
         </div>
     </footer>
@@ -246,7 +311,7 @@
                 <ul id="comment-list" class="comment-list">
                     </ul>
                 <div class="comment-input-group">
-                    <textarea id="new-comment-input" rows="1" placeholder="Tulis lalu enter untuk posting komentar"></textarea>
+                    <textarea id="new-comment-input" rows="1" placeholder="Tulis komentar, lalu tekan Enter untuk Kirim"></textarea>
                     <button id="send-comment-btn">Kirim</button>
                 </div>
             </div>
@@ -271,7 +336,11 @@
     const database = firebase.database();
     const statusesRef = database.ref('pustakawan_statuses_list'); 
     const commentsBaseRef = database.ref('status_comments'); 
+    
+    // --- KONSTANTA BATAS KARAKTER ---
     const MAX_STATUS_COUNT = 15; 
+    const MAX_STATUS_CHARS = 200; // Batas Karakter Status
+    const MAX_COMMENT_CHARS = 150; // Batas Karakter Komentar
 
     // Elemen DOM
     const newStatusInput = document.getElementById('new-status-input');
@@ -283,20 +352,30 @@
     const newCommentInput = document.getElementById('new-comment-input');
     
     let currentStatusId = null; 
-    
-    // Ikon SVG Orang
+    let activeCommentListeners = {}; 
+
+    // Ikon SVG Orang 
     const personSvg = `
-        <svg class="comment-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
         </svg>
     `;
 
-    // Ikon SVG Orang untuk Snippet
-    const personSnippetSvg = `
-        <svg class="snippet-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-        </svg>
-    `;
+    // --- FUNGSI AUTO-RESIZE TEXTAREA ---
+    function autoResizeTextarea(element) {
+        element.style.height = 'auto'; // Reset height
+        element.style.height = (element.scrollHeight) + 'px'; // Set new height
+    }
+
+    // Terapkan auto-resize pada input status
+    newStatusInput.addEventListener('input', function() {
+        autoResizeTextarea(this);
+    });
+
+    // Terapkan auto-resize pada input komentar
+    newCommentInput.addEventListener('input', function() {
+        autoResizeTextarea(this);
+    });
 
     // --- FUNGSI MODAL ---
     
@@ -306,6 +385,10 @@
         commentList.innerHTML = '<li style="text-align: center; color: var(--subtle-text);">Memuat komentar...</li>';
         statusModal.style.display = 'block';
         loadComments(statusId);
+        
+        // Reset dan terapkan auto-resize saat modal dibuka
+        newCommentInput.value = '';
+        autoResizeTextarea(newCommentInput); 
         newCommentInput.focus(); 
     }
 
@@ -313,6 +396,7 @@
         statusModal.style.display = 'none';
         currentStatusId = null;
         newCommentInput.value = '';
+        
         commentsBaseRef.off('value'); 
     }
 
@@ -331,7 +415,7 @@
 
     function loadComments(statusId) {
         const commentsRef = commentsBaseRef.child(statusId);
-        commentsRef.off(); 
+        commentsBaseRef.off('value'); 
 
         commentsRef.on('value', (snapshot) => {
             commentList.innerHTML = '';
@@ -341,7 +425,6 @@
                     comments.push(childSnapshot.val());
                 });
 
-                // Urutkan komentar dari terbaru ke terlama (terbaru di atas)
                 comments.sort((a, b) => b.timestamp - a.timestamp);
 
                 comments.forEach(comment => {
@@ -353,8 +436,10 @@
                     const dateString = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
                     const timestampHtml = `<span class="comment-info">${dateString}, ${timeString} WIB</span>`;
 
+                    const commentPersonSvg = personSvg.replace('viewBox', 'class="comment-icon" viewBox');
+
                     li.innerHTML = `
-                        ${personSvg}
+                        ${commentPersonSvg}
                         <div class="comment-content">
                             ${comment.text}
                             ${timestampHtml}
@@ -375,10 +460,23 @@
             submitComment();
         }
     });
+    
+    // --- Batasi Karakter Komentar saat mengetik ---
+    newCommentInput.addEventListener('input', function() {
+        if (this.value.length > MAX_COMMENT_CHARS) {
+            this.value = this.value.substring(0, MAX_COMMENT_CHARS);
+        }
+    });
 
     function submitComment() {
         const commentText = newCommentInput.value.trim();
         if (commentText && currentStatusId) {
+             // Cek batasan karakter saat submit (double check)
+            if (commentText.length > MAX_COMMENT_CHARS) {
+                alert(`Komentar dibatasi maksimal ${MAX_COMMENT_CHARS} karakter.`);
+                return;
+            }
+            
             const commentRef = commentsBaseRef.child(currentStatusId).push();
             commentRef.set({
                 text: commentText,
@@ -386,6 +484,7 @@
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             }).then(() => {
                 newCommentInput.value = '';
+                autoResizeTextarea(newCommentInput); // Reset ketinggian
             }).catch(error => {
                 console.error("Gagal mengirim komentar:", error);
                 alert("Gagal mengirim komentar.");
@@ -394,68 +493,41 @@
     }
 
 
-    // --- FUNGSI UTAMA (Realtime Snippet & Status) ---
+    // --- FUNGSI STATUS ---
 
+    // --- Batasi Karakter Status saat mengetik ---
+    newStatusInput.addEventListener('input', function() {
+        if (this.value.length > MAX_STATUS_CHARS) {
+            this.value = this.value.substring(0, MAX_STATUS_CHARS);
+        }
+    });
+    
     function updateCommentDataForStatus(statusKey, listItem) {
         const commentsRef = commentsBaseRef.child(statusKey);
-        const snippetContainer = listItem.querySelector('.comment-snippet-container');
         const badgeSpan = listItem.querySelector('.comment-badge');
         
-        commentsRef.off();
+        if (activeCommentListeners[statusKey]) {
+            commentsRef.off('value', activeCommentListeners[statusKey]);
+        }
 
-        commentsRef.on('value', (snapshot) => {
-            let commentCount = 0;
-            let snippetsHtml = '';
-            
-            if (snapshot.exists()) {
-                commentCount = snapshot.numChildren();
-                
-                const allComments = [];
-                snapshot.forEach((commentSnapshot) => {
-                    allComments.push(commentSnapshot.val());
-                });
-
-                allComments.sort((a, b) => b.timestamp - a.timestamp);
-
-                const latestComments = allComments.slice(0, 3);
-
-                const snippetList = document.createElement('ul');
-                snippetList.className = 'snippet-list';
-
-                if (latestComments.length > 0) {
-                    latestComments.forEach(comment => {
-                        const li = document.createElement('li');
-                        li.className = 'snippet-item';
-                        
-                        const text = comment.text;
-                        const snippetText = text.length > 40 
-                            ? text.substring(0, 40).trim() + '...'
-                            : text;
-                        
-                        li.innerHTML = `
-                            ${personSnippetSvg}
-                            <span>${snippetText}</span>
-                        `;
-                        snippetList.appendChild(li);
-                    });
-                    snippetsHtml = snippetList.outerHTML;
-                } else {
-                    snippetsHtml = `<span class="comment-snippet">Belum ada komentar.</span>`;
-                }
-
-            } else {
-                snippetsHtml = `<span class="comment-snippet">Belum ada komentar.</span>`;
-            }
-
-            // Update DOM
-            snippetContainer.innerHTML = snippetsHtml;
+        const commentListener = commentsRef.on('value', (snapshot) => {
+            const commentCount = snapshot.numChildren();
             badgeSpan.innerHTML = `<i class="fas fa-comment"></i> ${commentCount}`;
         });
+        
+        activeCommentListeners[statusKey] = commentListener;
     }
+
 
     function sendStatus() {
         const text = newStatusInput.value.trim();
         if (text) {
+             // Cek batasan karakter saat submit (double check)
+            if (text.length > MAX_STATUS_CHARS) {
+                alert(`Status dibatasi maksimal ${MAX_STATUS_CHARS} karakter.`);
+                return;
+            }
+            
             statusesRef.orderByChild('timestamp').once('value', (snapshot) => {
                 const count = snapshot.numChildren();
                 
@@ -472,6 +544,7 @@
                             .then(() => {
                                 console.log(`Status terlama (Key: ${oldestKey}) dihapus.`);
                                 commentsBaseRef.child(oldestKey).remove();
+                                delete activeCommentListeners[oldestKey]; 
                             });
                     }
                 }
@@ -484,6 +557,7 @@
                 statusesRef.push(newStatusData)
                     .then(() => {
                         newStatusInput.value = ''; 
+                        autoResizeTextarea(newStatusInput); // Reset ketinggian
                     })
                     .catch((error) => {
                         console.error("Gagal mengirim status:", error);
@@ -504,6 +578,12 @@
     // --- FUNGSI MENAMPILKAN DAFTAR STATUS UTAMA ---
     statusesRef.orderByChild('timestamp').limitToLast(MAX_STATUS_COUNT).on('value', (statusesSnapshot) => {
         
+        Object.keys(activeCommentListeners).forEach(key => {
+            const commentsRef = commentsBaseRef.child(key);
+            commentsRef.off('value', activeCommentListeners[key]);
+        });
+        activeCommentListeners = {}; 
+
         statusList.innerHTML = ''; 
 
         if (statusesSnapshot.exists()) {
@@ -529,10 +609,14 @@
                 const metaText = `Pustakawan | ${dateString}, ${timeString} WIB`;
 
                 listItem.innerHTML = `
-                    <p class="status-text">${status.text}</p>
-                    <div class="comment-snippet-container">
-                        <span class="comment-snippet">Memuat 3 cuplikan komentar...</span>
+                    <div class="status-header">
+                        <div class="profile-photo">
+                            ${personSvg}
+                        </div>
+                        <div class="profile-name">Pustakawan</div>
                     </div>
+                    <p class="status-text">${status.text}</p>
+                    
                     <span class="status-meta">
                         <span>${metaText}</span>
                         <div class="cta-group">
@@ -547,7 +631,7 @@
 
                 listItem.addEventListener('click', function() {
                     const statusId = this.getAttribute('data-status-id');
-                    const statusText = this.querySelector('.status-text').innerText;
+                    const statusText = status.text; 
                     openStatusModal(statusId, statusText);
                 });
             });
@@ -559,5 +643,5 @@
         statusList.innerHTML = '<li class="status-item" style="text-align: center; color: red;">ERROR: Gagal memuat data dari Firebase.</li>';
     });
 </script>
-</body>
+</body> 
 </html>
