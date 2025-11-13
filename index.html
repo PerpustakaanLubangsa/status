@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Status Pustakawan Full Width</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Roboto:wght[400]&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* CSS Disesuaikan: Full Width, Putih, Aksen #7ABCFD, Font Nunito */
+        :root {
+            --accent-color: #7ABCFD; /* Cyan Utama */
+            --light-accent: #EBF5FF; /* Light Cyan untuk Card dan Footer */
+            --text-color: #333;
+            --subtle-text: #888;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+            padding-bottom: 70px;
+        }
+        
+        /* MAIN CONTENT - Daftar Status */
+        main {
+            padding: 20px 10px 10px 10px;
+            width: 100%; 
+            margin: 0; 
+            box-sizing: border-box;
+        }
+        
+        /* DAFTAR STATUS */
+        #status-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .status-item {
+            background-color: var(--light-accent); 
+            padding: 20px 15px 15px 15px; 
+            margin-bottom: 10px;
+            border: 1px solid white; 
+            border-radius: 0; 
+            box-shadow: 0 2px 5px rgba(122, 188, 253, 0.2); 
+            cursor: pointer; 
+            transition: background-color 0.2s;
+        }
+
+        .status-item:hover { background-color: #DDEFFF; }
+        
+        .status-text {
+            font-family: 'Nunito', sans-serif; font-size: 1.6em; font-weight: 900; color: var(--text-color); margin: 0 0 10px 0; text-align: center; text-transform: uppercase; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;
+        }
+
+        /* --- Gaya Cuplikan Komentar --- */
+        .comment-snippet-container {
+            min-height: 20px; 
+            text-align: left; 
+            margin-bottom: 10px;
+            border-bottom: 1px dashed var(--accent-color);
+            padding-bottom: 5px;
+            padding-left: 10px;
+        }
+
+        .snippet-list { list-style: none; padding: 0; margin: 0; }
+        .snippet-item {
+            font-size: 0.85em; color: var(--subtle-text); font-style: italic; display: flex; align-items: flex-start; margin-bottom: 3px; gap: 5px;
+        }
+        .snippet-item span { word-break: break-word; }
+        .snippet-icon { width: 14px; height: 14px; fill: var(--accent-color); margin-top: 2px; min-width: 14px; }
+        /* --- Akhir Gaya Cuplikan Komentar --- */
+        
+        /* Metadata (Waktu, CTA, dan Badge) */
+        .status-meta {
+            font-size: 0.75em; color: var(--subtle-text); padding-top: 5px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .cta-group { display: flex; align-items: center; font-size: 1em; font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--accent-color); }
+        .comment-badge { font-family: 'Roboto', sans-serif; font-size: 0.9em; font-weight: 700; color: var(--accent-color); padding: 2px 5px; border-radius: 3px; background-color: white; border: 1px solid var(--accent-color); margin-right: 8px; }
+
+        /* FOOTER & MODAL STYLES */
+        footer {
+            background-color: var(--light-accent); border-top: 2px solid var(--accent-color); padding: 10px 20px; position: fixed; bottom: 0; left: 0; right: 0; box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1); z-index: 10; width: 100%; box-sizing: border-box;
+        }
+        
+        .input-group { display: flex; align-items: center; }
+        .input-group textarea { width: 100%; padding: 10px; border: 1px solid var(--accent-color); border-radius: 5px; box-sizing: border-box; resize: none; color: var(--text-color); }
+        #send-status-btn { display: none; }
+        
+        /* MODAL */
+        .modal { 
+            display: none; position: fixed; z-index: 20; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; 
+            background-color: rgba(0, 0, 0, 0.6); padding-top: 0; 
+        }
+        
+        /* ANIMASI MEMBESAR (SCALE) */
+        @keyframes animatescale { 
+            from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; } 
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; } 
+        }
+
+        .modal-content { 
+            background-color: white; margin: 0; padding: 20px; border: 1px solid var(--accent-color); width: 90%; max-width: 500px; border-radius: 8px; position: absolute; 
+            top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); 
+            animation-name: animatescale; 
+            animation-duration: 0.3s; 
+        }
+        
+        /* TOMBOL TUTUP BARU (Kanan Atas) */
+        #close-modal-btn {
+            position: absolute;
+            top: 15px; 
+            right: 15px; 
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px; 
+            cursor: pointer;
+            font-weight: 700;
+            z-index: 30;
+            text-transform: uppercase;
+        }
+
+        /* Penyesuaian Ruang untuk Tombol Tutup */
+        .popup-status-text { 
+            font-family: 'Nunito', sans-serif; font-size: 1.4em; font-weight: 900; color: var(--text-color); 
+            margin: 40px 0 20px 0; 
+            text-align: center; text-transform: uppercase; padding: 15px; background-color: var(--light-accent); border-radius: 5px; border: 1px solid var(--accent-color); 
+        }
+
+        .comment-section { margin-top: 20px; }
+        .comment-header { font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--accent-color); border-bottom: 2px solid var(--light-accent); padding-bottom: 5px; margin-bottom: 10px; }
+        .comment-list { list-style: none; padding: 0; max-height: 250px; overflow-y: auto; margin-bottom: 15px; }
+
+        .comment-item { 
+            padding: 8px 0; border-bottom: 1px dotted var(--light-accent); font-size: 0.9em; color: var(--text-color); display: flex; align-items: flex-start; gap: 8px; 
+        }
+
+        .comment-content { flex-grow: 1; word-break: break-word; }
+        .comment-icon { width: 20px; height: 20px; min-width: 20px; fill: var(--accent-color); margin-top: 2px; }
+        .comment-info { font-size: 0.75em; color: var(--subtle-text); margin-top: 3px; display: block; }
+        
+        /* Input Komentar (Enter to Send) */
+        .comment-input-group { display: flex; align-items: flex-end; }
+        .comment-input-group textarea { flex-grow: 1; padding: 8px; border: 1px solid var(--subtle-text); border-radius: 5px; resize: none; margin-right: 0; }
+        #send-comment-btn { display: none; }
+
+
+        /* ==================================== */
+        /* MEDIA QUERY: PENYESUAIAN LAYAR KECIL */
+        /* ==================================== */
+        @media (max-width: 600px) {
+            
+            /* Konten Utama */
+            main {
+                padding: 10px 5px;
+            }
+
+            .status-item {
+                padding: 15px 10px 10px 10px; /* Padding card status lebih kecil */
+            }
+
+            .status-text {
+                font-size: 1.4em; /* Ukuran font status sedikit dikecilkan */
+                margin: 0 0 8px 0;
+            }
+
+            /* Footer Input Status */
+            footer {
+                padding: 8px 10px;
+            }
+            .input-group textarea {
+                padding: 8px;
+            }
+            
+            /* Modal */
+            .modal-content {
+                width: 95%; /* Modal sedikit lebih lebar di mobile */
+                padding: 15px;
+            }
+
+            /* Tombol Tutup */
+            #close-modal-btn {
+                top: 10px;
+                right: 10px;
+                padding: 6px 10px; /* Tombol tutup lebih ringkas */
+                font-size: 0.7em;
+            }
+
+            /* Teks Status di Pop-up */
+            .popup-status-text {
+                font-size: 1.2em;
+                margin: 35px 0 15px 0; /* Margin atas dikurangi, tapi masih aman dari tombol tutup */
+                padding: 10px;
+            }
+
+            /* Komentar */
+            .comment-list {
+                max-height: 200px; /* Tinggi daftar komentar disesuaikan */
+            }
+            .comment-item {
+                font-size: 0.8em;
+            }
+            .comment-icon {
+                width: 18px;
+                height: 18px;
+                min-width: 18px;
+            }
+            .comment-input-group textarea {
+                padding: 6px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</head>
+<body>
+
+    <main>
+        <ul id="status-list">
+            <li class="status-item" style="text-align: center; color: var(--subtle-text);">Memuat daftar status...</li>
+        </ul>
+    </main>
+
+    <footer>
+        <div class="input-group">
+            <textarea id="new-status-input" rows="1" placeholder="Tulis status, lalu tekan Enter untuk Kirim (Maks 15 Status)" maxlength="150"></textarea>
+            <button id="send-status-btn">Kirim</button> 
+        </div>
+    </footer>
+
+    <div id="status-modal" class="modal">
+        <div class="modal-content">
+            <button id="close-modal-btn">TUTUP</button>
+            
+            <div id="popup-status-text" class="popup-status-text"></div>
+            
+            <div class="comment-section">
+                <h3 class="comment-header">Komentar</h3>
+                <ul id="comment-list" class="comment-list">
+                    </ul>
+                <div class="comment-input-group">
+                    <textarea id="new-comment-input" rows="1" placeholder="Tulis komentar, lalu tekan Enter untuk Kirim..."></textarea>
+                    <button id="send-comment-btn">Kirim</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // Konfigurasi Firebase Anda
+    const firebaseConfig = {
+      apiKey: "AIzaSyBoNUK_1_Hfqa8yHUVZ_TWOc28zkImWPbw",
+      authDomain: "perpustakaandata-c7726.firebaseapp.com",
+      databaseURL: "https://perpustakaandata-c7726-default-rtdb.firebaseio.com",
+      projectId: "perpustakaandata-c7726",
+      storageBucket: "perpustakaandata-c7726.firebasestorage.app",
+      messagingSenderId: "1099434992232",
+      appId: "1:1099434992232:web:90fbc3e17c7a4ae1a051dd"
+    };
+
+    // Inisialisasi Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    const database = firebase.database();
+    const statusesRef = database.ref('pustakawan_statuses_list'); 
+    const commentsBaseRef = database.ref('status_comments'); 
+    const MAX_STATUS_COUNT = 15; 
+
+    // Elemen DOM
+    const newStatusInput = document.getElementById('new-status-input');
+    const statusList = document.getElementById('status-list');
+    const statusModal = document.getElementById('status-modal');
+    const closeBtnModal = document.getElementById('close-modal-btn'); 
+    const popupStatusText = document.getElementById('popup-status-text');
+    const commentList = document.getElementById('comment-list');
+    const newCommentInput = document.getElementById('new-comment-input');
+    
+    let currentStatusId = null; 
+    
+    // Ikon SVG Orang
+    const personSvg = `
+        <svg class="comment-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+    `;
+
+    // Ikon SVG Orang untuk Snippet
+    const personSnippetSvg = `
+        <svg class="snippet-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+    `;
+
+    // --- FUNGSI MODAL ---
+    
+    function openStatusModal(statusId, statusText) {
+        currentStatusId = statusId;
+        popupStatusText.innerText = statusText;
+        commentList.innerHTML = '<li style="text-align: center; color: var(--subtle-text);">Memuat komentar...</li>';
+        statusModal.style.display = 'block';
+        loadComments(statusId);
+        newCommentInput.focus(); 
+    }
+
+    function closeStatusModal() {
+        statusModal.style.display = 'none';
+        currentStatusId = null;
+        newCommentInput.value = '';
+        commentsBaseRef.off('value'); 
+    }
+
+    closeBtnModal.onclick = function() { 
+        closeStatusModal();
+    }
+    
+    window.onclick = function(event) {
+        if (event.target == statusModal) {
+            // Menonaktifkan penutupan dengan klik di luar modal
+        }
+    }
+
+
+    // --- FUNGSI KOMENTAR & REALTIME ---
+
+    function loadComments(statusId) {
+        const commentsRef = commentsBaseRef.child(statusId);
+        commentsRef.off(); 
+
+        commentsRef.on('value', (snapshot) => {
+            commentList.innerHTML = '';
+            if (snapshot.exists()) {
+                const comments = [];
+                snapshot.forEach((childSnapshot) => {
+                    comments.push(childSnapshot.val());
+                });
+
+                // Urutkan komentar dari terbaru ke terlama (terbaru di atas)
+                comments.sort((a, b) => b.timestamp - a.timestamp);
+
+                comments.forEach(comment => {
+                    const li = document.createElement('li');
+                    li.className = 'comment-item';
+                    
+                    const date = new Date(comment.timestamp);
+                    const timeString = date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                    const dateString = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                    const timestampHtml = `<span class="comment-info">${dateString}, ${timeString} WIB</span>`;
+
+                    li.innerHTML = `
+                        ${personSvg}
+                        <div class="comment-content">
+                            ${comment.text}
+                            ${timestampHtml}
+                        </div>
+                    `;
+                    commentList.appendChild(li);
+                });
+            } else {
+                commentList.innerHTML = '<li style="text-align: center; color: var(--subtle-text);">Belum ada komentar.</li>';
+            }
+        });
+    }
+
+    // Kirim Komentar menggunakan tombol Enter
+    newCommentInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) { 
+            e.preventDefault(); 
+            submitComment();
+        }
+    });
+
+    function submitComment() {
+        const commentText = newCommentInput.value.trim();
+        if (commentText && currentStatusId) {
+            const commentRef = commentsBaseRef.child(currentStatusId).push();
+            commentRef.set({
+                text: commentText,
+                author: 'Aji', 
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            }).then(() => {
+                newCommentInput.value = '';
+            }).catch(error => {
+                console.error("Gagal mengirim komentar:", error);
+                alert("Gagal mengirim komentar.");
+            });
+        }
+    }
+
+
+    // --- FUNGSI UTAMA (Realtime Snippet & Status) ---
+
+    function updateCommentDataForStatus(statusKey, listItem) {
+        const commentsRef = commentsBaseRef.child(statusKey);
+        const snippetContainer = listItem.querySelector('.comment-snippet-container');
+        const badgeSpan = listItem.querySelector('.comment-badge');
+        
+        commentsRef.off();
+
+        commentsRef.on('value', (snapshot) => {
+            let commentCount = 0;
+            let snippetsHtml = '';
+            
+            if (snapshot.exists()) {
+                commentCount = snapshot.numChildren();
+                
+                const allComments = [];
+                snapshot.forEach((commentSnapshot) => {
+                    allComments.push(commentSnapshot.val());
+                });
+
+                allComments.sort((a, b) => b.timestamp - a.timestamp);
+
+                const latestComments = allComments.slice(0, 3);
+
+                const snippetList = document.createElement('ul');
+                snippetList.className = 'snippet-list';
+
+                if (latestComments.length > 0) {
+                    latestComments.forEach(comment => {
+                        const li = document.createElement('li');
+                        li.className = 'snippet-item';
+                        
+                        const text = comment.text;
+                        const snippetText = text.length > 40 
+                            ? text.substring(0, 40).trim() + '...'
+                            : text;
+                        
+                        li.innerHTML = `
+                            ${personSnippetSvg}
+                            <span>${snippetText}</span>
+                        `;
+                        snippetList.appendChild(li);
+                    });
+                    snippetsHtml = snippetList.outerHTML;
+                } else {
+                    snippetsHtml = `<span class="comment-snippet">Belum ada komentar.</span>`;
+                }
+
+            } else {
+                snippetsHtml = `<span class="comment-snippet">Belum ada komentar.</span>`;
+            }
+
+            // Update DOM
+            snippetContainer.innerHTML = snippetsHtml;
+            badgeSpan.innerHTML = `<i class="fas fa-comment"></i> ${commentCount}`;
+        });
+    }
+
+    function sendStatus() {
+        const text = newStatusInput.value.trim();
+        if (text) {
+            statusesRef.orderByChild('timestamp').once('value', (snapshot) => {
+                const count = snapshot.numChildren();
+                
+                if (count >= MAX_STATUS_COUNT) {
+                    let oldestKey = null;
+                    snapshot.forEach((childSnapshot) => {
+                        if (oldestKey === null) { 
+                            oldestKey = childSnapshot.key;
+                        }
+                    });
+                    
+                    if (oldestKey) {
+                        database.ref(`pustakawan_statuses_list/${oldestKey}`).remove()
+                            .then(() => {
+                                console.log(`Status terlama (Key: ${oldestKey}) dihapus.`);
+                                commentsBaseRef.child(oldestKey).remove();
+                            });
+                    }
+                }
+
+                const newStatusData = {
+                    text: text,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP 
+                };
+                
+                statusesRef.push(newStatusData)
+                    .then(() => {
+                        newStatusInput.value = ''; 
+                    })
+                    .catch((error) => {
+                        console.error("Gagal mengirim status:", error);
+                        alert("Gagal mengirim status. Cek konsol.");
+                    });
+                
+            });
+        }
+    }
+
+    newStatusInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) { 
+            e.preventDefault(); 
+            sendStatus();
+        }
+    });
+
+    // --- FUNGSI MENAMPILKAN DAFTAR STATUS UTAMA ---
+    statusesRef.orderByChild('timestamp').limitToLast(MAX_STATUS_COUNT).on('value', (statusesSnapshot) => {
+        
+        statusList.innerHTML = ''; 
+
+        if (statusesSnapshot.exists()) {
+            const statuses = [];
+            const keys = [];
+
+            statusesSnapshot.forEach((childSnapshot) => {
+                statuses.push(childSnapshot.val());
+                keys.push(childSnapshot.key); 
+            });
+
+            statuses.reverse().forEach((status, index) => {
+                const statusKey = keys.reverse()[index];
+                const listItem = document.createElement('li');
+                listItem.className = 'status-item';
+                
+                listItem.setAttribute('data-status-id', statusKey); 
+
+                const date = new Date(status.timestamp);
+                const timeString = date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                const dateString = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                
+                const metaText = `Pustakawan | ${dateString}, ${timeString} WIB`;
+
+                listItem.innerHTML = `
+                    <p class="status-text">${status.text}</p>
+                    <div class="comment-snippet-container">
+                        <span class="comment-snippet">Memuat 3 cuplikan komentar...</span>
+                    </div>
+                    <span class="status-meta">
+                        <span>${metaText}</span>
+                        <div class="cta-group">
+                            <span class="comment-badge"><i class="fas fa-comment"></i> 0</span>
+                            Klik untuk berkomentar.
+                        </div>
+                    </span>
+                `;
+                statusList.appendChild(listItem);
+                
+                updateCommentDataForStatus(statusKey, listItem);
+
+                listItem.addEventListener('click', function() {
+                    const statusId = this.getAttribute('data-status-id');
+                    const statusText = this.querySelector('.status-text').innerText;
+                    openStatusModal(statusId, statusText);
+                });
+            });
+        } else {
+            statusList.innerHTML = '<li class="status-item" style="text-align: center; color: var(--subtle-text);">Belum ada status yang diposting.</li>';
+        }
+    }, (error) => {
+        console.error("Gagal mengambil data status:", error);
+        statusList.innerHTML = '<li class="status-item" style="text-align: center; color: red;">ERROR: Gagal memuat data dari Firebase.</li>';
+    });
+</script>
+</body>
+</html>
