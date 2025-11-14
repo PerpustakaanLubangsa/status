@@ -156,13 +156,13 @@
 
     <main>
         <ul id="status-list">
-            <li class="status-item" style="text-align: center; color: var(--subtle-text);">Memuat daftar status...</li>
+            <li class="status-item" style="text-align: center; color: var(--subtle-text);">Memuat</li>
         </ul>
     </main>
 
     <footer>
         <div class="input-group">
-            <textarea id="new-status-input" rows="1" placeholder="Tulis status, lalu tekan Enter untuk Kirim (Maks 500 Karakter)"></textarea>
+            <textarea id="new-status-input" rows="1" placeholder="Tulis status, lalu tekan Enter untuk Kirim"></textarea>
             <button id="send-status-btn">Kirim</button> 
         </div>
     </footer>
@@ -188,7 +188,7 @@
     
     // --- KONSTANTA BATAS KARAKTER ---
     const MAX_STATUS_COUNT = 15; 
-    const MAX_STATUS_CHARS = 500; // DIUBAH MENJADI 500 KARAKTER
+    const MAX_STATUS_CHARS = 1000;
 
     // Elemen DOM
     const newStatusInput = document.getElementById('new-status-input');
